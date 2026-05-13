@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PM VINO – Weinarten</title>
   <style>
-    /* ═══════════════════════════════════════════════
-       PM VINO – Weinarten Scroll-Story
-       ═══════════════════════════════════════════════ */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: Georgia, serif; }
 
@@ -21,7 +18,6 @@
       --tx:  #2d1a17;
       --mu:  #7a5245;
       --bo:  rgba(155,106,47,.18);
-
       width: 100%;
       background: var(--cr);
       color: var(--tx);
@@ -29,7 +25,7 @@
       overflow-x: hidden;
     }
 
-    /* ── Intro ── */
+    /* Intro */
     .pmv-ws-intro {
       max-width: 780px;
       margin: 0 auto;
@@ -66,7 +62,7 @@
       margin: 0 auto;
     }
 
-    /* ── Separator ── */
+    /* Separator */
     .pmv-ws-sep {
       width: 1px;
       height: 54px;
@@ -74,7 +70,7 @@
       margin: 0 auto;
     }
 
-    /* ── Story Item ── */
+    /* Story Item */
     .pmv-ws-item {
       min-height: 82vh;
       display: flex;
@@ -99,7 +95,13 @@
     .pmv-ws-item--alt .pmv-ws-item__img  { order: 2; }
     .pmv-ws-item--alt .pmv-ws-item__text { order: 1; }
 
-    /* ── Story Image ── */
+    /* Grid-Kinder: verhindert Overflow aus der Spalte */
+    .pmv-ws-item__img,
+    .pmv-ws-item__text {
+      min-width: 0;
+    }
+
+    /* Story Image */
     .pmv-ws-item__img {
       position: relative;
       width: 100%;
@@ -145,7 +147,7 @@
       box-shadow: 0 3px 12px rgba(0,0,0,.14);
     }
 
-    /* ── Text ── */
+    /* Text */
     .pmv-ws-item__label {
       display: inline-flex;
       align-items: center;
@@ -171,13 +173,14 @@
       font-weight: 700;
       margin: 0 0 20px;
       letter-spacing: -.015em;
+      word-break: break-word;
     }
     .pmv-ws-item__text p {
       color: var(--mu);
       font-size: 17px;
       line-height: 1.7;
       margin: 0 0 34px;
-      max-width: 400px;
+      max-width: 100%;
     }
     .pmv-ws-btn {
       display: inline-block;
@@ -198,7 +201,7 @@
       box-shadow: 0 15px 38px rgba(74,21,21,.3);
     }
 
-    /* ── Overview ── */
+    /* Overview */
     .pmv-ws-overview {
       background: var(--wi);
       padding: 90px 44px 100px;
@@ -253,7 +256,7 @@
       transition: transform .5s ease;
     }
     .pmv-ws-card:hover .pmv-ws-card__img img { transform: scale(1.06); }
-    /* KEIN ::after hier – kein roter Überzug auf den Flaschen */
+    /* Kein ::after – kein roter Überzug auf den Flaschen in der Übersicht */
     .pmv-ws-card__body { padding: 16px 18px 20px; }
     .pmv-ws-card__title {
       color: var(--cr);
@@ -271,13 +274,10 @@
       align-items: center;
       gap: 5px;
     }
-    .pmv-ws-card__cta::after {
-      content: "→";
-      transition: transform .2s;
-    }
+    .pmv-ws-card__cta::after { content: "→"; transition: transform .2s; }
     .pmv-ws-card:hover .pmv-ws-card__cta::after { transform: translateX(4px); }
 
-    /* ── Reveal Animations ── */
+    /* Animationen */
     .pmv-js .pmv-rl {
       opacity: 0;
       transform: translateX(-64px);
@@ -296,7 +296,6 @@
     .pmv-js .pmv-rl.pmv-in,
     .pmv-js .pmv-rr.pmv-in,
     .pmv-js .pmv-ru.pmv-in { opacity: 1; transform: none; }
-
     .pmv-js .pmv-ws-card {
       opacity: 0;
       transform: translateY(26px);
@@ -308,7 +307,7 @@
     .pmv-js .pmv-ws-card:nth-child(3) { transition-delay: .2s; }
     .pmv-js .pmv-ws-card:nth-child(4) { transition-delay: .3s; }
 
-    /* ── Responsive ── */
+    /* Responsive */
     @media (max-width: 1080px) {
       .pmv-ws-item__inner { grid-template-columns: 360px 1fr; gap: 55px; padding: 0 32px; }
       .pmv-ws-item--alt .pmv-ws-item__inner { grid-template-columns: 1fr 360px; }
@@ -325,9 +324,8 @@
       .pmv-ws-item--alt .pmv-ws-item__text { order: 2; }
       .pmv-ws-item__img { aspect-ratio: unset; height: 300px; border-radius: 16px; }
       .pmv-ws-item__text h3 { font-size: 30px; }
-      .pmv-ws-item__text p  { max-width: 100%; font-size: 16px; margin-bottom: 26px; }
-      .pmv-js .pmv-rl { transform: translateY(28px); }
-      .pmv-js .pmv-rr { transform: translateY(28px); }
+      .pmv-ws-item__text p  { font-size: 16px; margin-bottom: 26px; }
+      .pmv-js .pmv-rl, .pmv-js .pmv-rr { transform: translateY(28px); }
       .pmv-js .pmv-rl.pmv-in, .pmv-js .pmv-rr.pmv-in { transform: none; }
       .pmv-ws-grid     { grid-template-columns: repeat(2, 1fr); gap: 14px; }
       .pmv-ws-overview { padding: 62px 20px 72px; }
@@ -370,7 +368,7 @@
     <div class="pmv-ws-item__inner">
       <div class="pmv-ws-item__img pmv-rl">
         <span class="pmv-ws-num">01</span>
-        <img src="BILD-URL-ROTWEIN-HIER-ERSETZEN" alt="Rotwein" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=900&h=1350&fit=crop" alt="Rotwein" loading="lazy" width="900" height="1350">
       </div>
       <div class="pmv-ws-item__text pmv-rr">
         <div class="pmv-ws-item__label">Weinart 01</div>
@@ -388,7 +386,7 @@
     <div class="pmv-ws-item__inner">
       <div class="pmv-ws-item__img pmv-rr">
         <span class="pmv-ws-num">02</span>
-        <img src="BILD-URL-WEISSWEIN-HIER-ERSETZEN" alt="Weißwein" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1474722883778-792e7990302f?w=900&h=1350&fit=crop" alt="Weißwein" loading="lazy" width="900" height="1350">
       </div>
       <div class="pmv-ws-item__text pmv-rl">
         <div class="pmv-ws-item__label">Weinart 02</div>
@@ -406,7 +404,7 @@
     <div class="pmv-ws-item__inner">
       <div class="pmv-ws-item__img pmv-rl">
         <span class="pmv-ws-num">03</span>
-        <img src="BILD-URL-ROSE-HIER-ERSETZEN" alt="Rosé" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&h=1350&fit=crop" alt="Rosé" loading="lazy" width="900" height="1350">
       </div>
       <div class="pmv-ws-item__text pmv-rr">
         <div class="pmv-ws-item__label">Weinart 03</div>
@@ -424,7 +422,7 @@
     <div class="pmv-ws-item__inner">
       <div class="pmv-ws-item__img pmv-rr">
         <span class="pmv-ws-num">04</span>
-        <img src="BILD-URL-APERITIF-HIER-ERSETZEN" alt="Aperitif &amp; Sekt" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1547595628-c61a29f496f0?w=900&h=1350&fit=crop" alt="Aperitif &amp; Sekt" loading="lazy" width="900" height="1350">
       </div>
       <div class="pmv-ws-item__text pmv-rl">
         <div class="pmv-ws-item__label">Weinart 04</div>
@@ -450,7 +448,7 @@
 
         <a href="/collections/rot-wein" class="pmv-ws-card">
           <div class="pmv-ws-card__img">
-            <img src="BILD-URL-ROTWEIN-HIER-ERSETZEN" alt="Rotwein" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=800&fit=crop" alt="Rotwein" loading="lazy" width="600" height="800">
           </div>
           <div class="pmv-ws-card__body">
             <span class="pmv-ws-card__title">Rotwein</span>
@@ -460,7 +458,7 @@
 
         <a href="/collections/weiss-wein" class="pmv-ws-card">
           <div class="pmv-ws-card__img">
-            <img src="BILD-URL-WEISSWEIN-HIER-ERSETZEN" alt="Weißwein" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1474722883778-792e7990302f?w=600&h=800&fit=crop" alt="Weißwein" loading="lazy" width="600" height="800">
           </div>
           <div class="pmv-ws-card__body">
             <span class="pmv-ws-card__title">Weißwein</span>
@@ -470,7 +468,7 @@
 
         <a href="/collections/rose" class="pmv-ws-card">
           <div class="pmv-ws-card__img">
-            <img src="BILD-URL-ROSE-HIER-ERSETZEN" alt="Rosé" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=800&fit=crop" alt="Rosé" loading="lazy" width="600" height="800">
           </div>
           <div class="pmv-ws-card__body">
             <span class="pmv-ws-card__title">Rosé</span>
@@ -480,7 +478,7 @@
 
         <a href="/collections/aperitif-sekt" class="pmv-ws-card">
           <div class="pmv-ws-card__img">
-            <img src="BILD-URL-APERITIF-HIER-ERSETZEN" alt="Aperitif &amp; Sekt" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1547595628-c61a29f496f0?w=600&h=800&fit=crop" alt="Aperitif &amp; Sekt" loading="lazy" width="600" height="800">
           </div>
           <div class="pmv-ws-card__body">
             <span class="pmv-ws-card__title">Aperitif &amp; Sekt</span>
@@ -498,34 +496,25 @@
 (function () {
   var section = document.getElementById('pmv-ws');
   if (!section) return;
-
   section.classList.add('pmv-js');
-
   var reveals = section.querySelectorAll('.pmv-rl, .pmv-rr, .pmv-ru');
   var cards   = section.querySelectorAll('.pmv-ws-card');
-
   if (!('IntersectionObserver' in window)) {
-    reveals.forEach(function (el) { el.classList.add('pmv-in'); });
-    cards.forEach(function (el)   { el.classList.add('pmv-in'); });
+    reveals.forEach(function(el){ el.classList.add('pmv-in'); });
+    cards.forEach(function(el){ el.classList.add('pmv-in'); });
     return;
   }
-
   function makeObs(threshold, margin) {
-    return new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('pmv-in');
-          obs.unobserve(entry.target);
-        }
+    return new IntersectionObserver(function(entries, obs) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('pmv-in'); obs.unobserve(entry.target); }
       });
     }, { threshold: threshold, rootMargin: margin });
   }
-
   var storyObs = makeObs(0.16, '0px 0px -50px 0px');
   var cardObs  = makeObs(0.12, '0px 0px -30px 0px');
-
-  reveals.forEach(function (el) { storyObs.observe(el); });
-  cards.forEach(function (el)   { cardObs.observe(el);  });
+  reveals.forEach(function(el){ storyObs.observe(el); });
+  cards.forEach(function(el){ cardObs.observe(el); });
 })();
 </script>
 
