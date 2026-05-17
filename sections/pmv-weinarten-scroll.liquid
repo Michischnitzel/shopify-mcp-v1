@@ -1,25 +1,15 @@
 <style>
-/* ═══════════════════════════════════════════════
-   PM VINO – Weinarten Sticky-Scroll Story
-   ═══════════════════════════════════════════════ */
 .pmv-ws-driver {
   width: 100vw;
   position: relative;
   left: 50%; right: 50%;
   margin-left: -50vw; margin-right: -50vw;
-  /* Höhe wird von JS gesetzt */
 }
 
 .pmv-ws {
-  --cr:  #faf4e8;
-  --cr2: #f0e6cf;
-  --wi:  #4a1515;
-  --wi2: #6d2a24;
-  --go:  #9b6a2f;
-  --go2: #c49a4f;
-  --tx:  #2d1a17;
-  --mu:  #7a5245;
-  --bo:  rgba(155,106,47,.18);
+  --cr:#faf4e8; --cr2:#f0e6cf; --wi:#4a1515; --wi2:#6d2a24;
+  --go:#9b6a2f; --go2:#c49a4f; --tx:#2d1a17; --mu:#7a5245;
+  --bo:rgba(155,106,47,.18);
 
   width: 100%;
   background: var(--cr);
@@ -28,12 +18,21 @@
 }
 .pmv-ws * { box-sizing: border-box; }
 
-/* Sticky-Stage nur wenn JS aktiv */
+/* === Pin-States (JS managed) === */
 .pmv-ws.pmv-js {
-  position: sticky;
-  top: 0;
   height: 100vh;
   overflow: hidden;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+}
+.pmv-ws.pmv-js.is-pinned {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1;
+}
+.pmv-ws.pmv-js.is-park-bottom {
+  position: absolute;
+  top: auto; bottom: 0; left: 0; right: 0;
 }
 
 /* === Steps: ohne JS = normal gestapelt === */
@@ -47,7 +46,7 @@
 }
 .pmv-ws-step--overview { background: var(--wi); }
 
-/* === Steps: mit JS = absolut übereinander, animiert === */
+/* === Steps: mit JS = absolut, animiert === */
 .pmv-ws.pmv-js .pmv-ws-step {
   position: absolute;
   inset: 0;
@@ -55,48 +54,30 @@
   min-height: unset;
   opacity: 0;
   pointer-events: none;
-  transform: translateX(72px); /* Default: wartet von rechts */
+  transform: translateX(72px);
   transition: opacity .75s ease, transform .75s cubic-bezier(.22,1,.36,1);
 }
 .pmv-ws.pmv-js .pmv-ws-step[data-enter="left"] { transform: translateX(-72px); }
 .pmv-ws.pmv-js .pmv-ws-step[data-enter="up"]   { transform: translateY(48px); }
 
+/* Step 0 ist beim Page-Load aktiv (per HTML-Klasse) → keine Initial-Animation */
 .pmv-ws.pmv-js .pmv-ws-step.pmv-step--active {
   opacity: 1;
   pointer-events: auto;
   transform: none;
 }
-.pmv-ws.pmv-js .pmv-ws-step.pmv-step--before                        { opacity: 0; transform: translateX(-80px); }
-.pmv-ws.pmv-js .pmv-ws-step[data-enter="left"].pmv-step--before     { opacity: 0; transform: translateX(80px); }
-.pmv-ws.pmv-js .pmv-ws-step[data-enter="up"].pmv-step--before       { opacity: 0; transform: translateY(-48px); }
+.pmv-ws.pmv-js .pmv-ws-step.pmv-step--before                       { opacity: 0; transform: translateX(-80px); }
+.pmv-ws.pmv-js .pmv-ws-step[data-enter="left"].pmv-step--before    { opacity: 0; transform: translateX(80px); }
+.pmv-ws.pmv-js .pmv-ws-step[data-enter="up"].pmv-step--before      { opacity: 0; transform: translateY(-48px); }
 
-/* ── Intro ── */
-.pmv-ws-intro {
-  max-width: 740px;
-  text-align: center;
-}
-.pmv-ws-kicker {
-  display: inline-block; color: var(--go);
-  font-size: 11px; font-weight: 800;
-  letter-spacing: .22em; text-transform: uppercase;
-  margin-bottom: 18px;
-}
-.pmv-ws-intro h2 {
-  color: var(--wi);
-  font-size: clamp(32px, 5.2vw, 60px);
-  line-height: 1.02; font-weight: 700; margin: 0 0 18px;
-}
-.pmv-ws-intro p {
-  color: var(--mu); font-size: 17px; line-height: 1.72;
-  max-width: 520px; margin: 0 auto 26px;
-}
-.pmv-ws-ornament {
-  width: 52px; height: 2px;
-  background: linear-gradient(to right, transparent, var(--go), transparent);
-  margin: 0 auto;
-}
+/* === Intro === */
+.pmv-ws-intro { max-width: 740px; text-align: center; }
+.pmv-ws-kicker { display: inline-block; color: var(--go); font-size: 11px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; margin-bottom: 18px; }
+.pmv-ws-intro h2 { color: var(--wi); font-size: clamp(32px,5.2vw,60px); line-height: 1.02; font-weight: 700; margin: 0 0 18px; }
+.pmv-ws-intro p { color: var(--mu); font-size: 17px; line-height: 1.72; max-width: 520px; margin: 0 auto 26px; }
+.pmv-ws-ornament { width: 52px; height: 2px; background: linear-gradient(to right,transparent,var(--go),transparent); margin: 0 auto; }
 
-/* ── Weinart-Layout ── */
+/* === Weinart-Layout === */
 .pmv-ws-item__inner {
   max-width: 1100px; width: 100%;
   display: grid; grid-template-columns: 400px 1fr;
@@ -112,13 +93,10 @@
   aspect-ratio: 2/3; border-radius: 22px; overflow: hidden;
   box-shadow: 0 3px 0 rgba(155,106,47,.1), 0 28px 70px rgba(74,21,21,.18);
 }
-.pmv-ws-item__img img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center; display: block;
-}
+.pmv-ws-item__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pmv-ws-item__img::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(155deg, rgba(74,21,21,.2), transparent 55%);
+  background: linear-gradient(155deg,rgba(74,21,21,.2),transparent 55%);
   pointer-events: none;
 }
 .pmv-ws-num {
@@ -130,27 +108,10 @@
   letter-spacing: .06em; box-shadow: 0 3px 12px rgba(0,0,0,.14);
 }
 
-.pmv-ws-item__label {
-  display: inline-flex; align-items: center; gap: 10px;
-  color: var(--go); font-size: 11px; font-weight: 800;
-  letter-spacing: .18em; text-transform: uppercase;
-  margin-bottom: 16px;
-}
-.pmv-ws-item__label::before {
-  content: ""; flex-shrink: 0;
-  width: 28px; height: 1.5px; background: currentColor;
-}
-.pmv-ws-item__text h3 {
-  color: var(--wi);
-  font-size: clamp(34px, 4vw, 56px);
-  line-height: 1.0; font-weight: 700;
-  margin: 0 0 18px; letter-spacing: -.015em;
-  word-break: break-word;
-}
-.pmv-ws-item__text p {
-  color: var(--mu); font-size: 17px; line-height: 1.7;
-  margin: 0 0 30px; max-width: 100%;
-}
+.pmv-ws-item__label { display: inline-flex; align-items: center; gap: 10px; color: var(--go); font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 16px; }
+.pmv-ws-item__label::before { content: ""; flex-shrink: 0; width: 28px; height: 1.5px; background: currentColor; }
+.pmv-ws-item__text h3 { color: var(--wi); font-size: clamp(34px,4vw,56px); line-height: 1.0; font-weight: 700; margin: 0 0 18px; letter-spacing: -.015em; word-break: break-word; }
+.pmv-ws-item__text p { color: var(--mu); font-size: 17px; line-height: 1.7; margin: 0 0 30px; max-width: 100%; }
 .pmv-ws-btn {
   display: inline-block; padding: 14px 32px;
   background: var(--wi); color: var(--cr) !important;
@@ -160,73 +121,42 @@
   box-shadow: 0 8px 24px rgba(74,21,21,.22);
   transition: background .25s, transform .25s, box-shadow .25s;
 }
-.pmv-ws-btn:hover {
-  background: var(--wi2);
-  transform: translateY(-3px);
-  box-shadow: 0 14px 36px rgba(74,21,21,.3);
-}
+.pmv-ws-btn:hover { background: var(--wi2); transform: translateY(-3px); box-shadow: 0 14px 36px rgba(74,21,21,.3); }
 
-/* ── Übersicht ── */
-.pmv-ws-step--overview {
-  background: var(--wi);
-  overflow-y: auto;
-  align-items: center;
-}
+/* === Übersicht === */
+.pmv-ws-step--overview { background: var(--wi); overflow-y: auto; align-items: center; }
 .pmv-ws-overview-inner { max-width: 1100px; width: 100%; padding: 0 44px; }
 .pmv-ws-overview__head { text-align: center; margin-bottom: 36px; }
-.pmv-ws-overview__head h2 {
-  color: var(--cr);
-  font-size: clamp(22px, 3vw, 38px);
-  font-weight: 700; margin: 0 0 10px; line-height: 1.1;
-}
-.pmv-ws-overview__head p {
-  color: rgba(250,244,232,.72); font-size: 15px;
-  line-height: 1.65; max-width: 460px; margin: 0 auto;
-}
-.pmv-ws-grid {
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 16px;
-}
+.pmv-ws-overview__head h2 { color: var(--cr); font-size: clamp(22px,3vw,38px); font-weight: 700; margin: 0 0 10px; line-height: 1.1; }
+.pmv-ws-overview__head p { color: rgba(250,244,232,.72); font-size: 15px; max-width: 460px; margin: 0 auto; }
+
+.pmv-ws-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
 .pmv-ws-card {
   display: block; text-decoration: none !important;
   border-radius: 16px; overflow: hidden;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(250,244,232,.1);
+  background: rgba(255,255,255,.06); border: 1px solid rgba(250,244,232,.1);
   transition: transform .3s, box-shadow .3s, border-color .3s;
 }
-.pmv-ws-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(0,0,0,.3);
-  border-color: rgba(250,244,232,.22);
-}
+.pmv-ws-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,.3); border-color: rgba(250,244,232,.22); }
 .pmv-ws-card__img { position: relative; aspect-ratio: 3/4; overflow: hidden; }
-.pmv-ws-card__img img {
-  width: 100%; height: 100%; object-fit: cover; object-position: center;
-  display: block; transition: transform .5s ease;
-}
+.pmv-ws-card__img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
 .pmv-ws-card:hover .pmv-ws-card__img img { transform: scale(1.06); }
-/* kein ::after – kein roter Überzug auf den Flaschen */
 .pmv-ws-card__body { padding: 14px 16px 18px; }
 .pmv-ws-card__title { color: var(--cr); font-size: 15px; font-weight: 700; display: block; margin-bottom: 4px; }
-.pmv-ws-card__cta {
-  color: var(--go2); font-size: 12px; font-weight: 600;
-  letter-spacing: .06em;
-  display: inline-flex; align-items: center; gap: 4px;
-}
+.pmv-ws-card__cta { color: var(--go2); font-size: 12px; font-weight: 600; letter-spacing: .06em; display: inline-flex; align-items: center; gap: 4px; }
 .pmv-ws-card__cta::after { content: "→"; transition: transform .2s; }
 .pmv-ws-card:hover .pmv-ws-card__cta::after { transform: translateX(4px); }
 
-/* ── Fortschrittsbalken ── */
+/* === Fortschrittsbalken === */
 .pmv-ws-progress {
   display: none;
   position: absolute; bottom: 0; left: 0; right: 0;
   height: 3px; background: rgba(155,106,47,.15); z-index: 20;
 }
-.pmv-ws-progress__fill {
-  height: 100%; background: var(--go); width: 0%;
-  transition: width .4s ease;
-}
+.pmv-ws-progress__fill { height: 100%; background: var(--go); width: 0%; transition: width .4s ease; }
+.pmv-ws.pmv-js .pmv-ws-progress { display: block; }
 
-/* ── Scroll-Hinweis ── */
+/* === Scroll Hint === */
 .pmv-ws-hint {
   display: none;
   position: absolute; bottom: 18px; left: 50%;
@@ -237,22 +167,18 @@
   transition: opacity .5s;
   animation: pmv-bounce 2s ease infinite;
 }
+.pmv-ws.pmv-js .pmv-ws-hint { display: flex; }
 .pmv-ws-hint svg { width: 16px; height: 16px; opacity: .55; }
-@keyframes pmv-bounce {
-  0%, 100% { bottom: 18px; }
-  50%      { bottom: 10px; }
-}
+@keyframes pmv-bounce { 0%,100% { bottom: 18px; } 50% { bottom: 10px; } }
 
-/* ── Responsive ── */
+/* === Responsive === */
 @media (max-width: 1080px) {
   .pmv-ws-item__inner { grid-template-columns: 340px 1fr; gap: 52px; padding: 0 28px; }
   .pmv-ws-item__inner--alt { grid-template-columns: 1fr 340px; }
 }
 @media (max-width: 820px) {
   .pmv-ws.pmv-js .pmv-ws-step { padding: 20px 16px; }
-  .pmv-ws-item__inner, .pmv-ws-item__inner--alt {
-    grid-template-columns: 1fr; gap: 16px; padding: 0;
-  }
+  .pmv-ws-item__inner, .pmv-ws-item__inner--alt { grid-template-columns: 1fr; gap: 16px; padding: 0; }
   .pmv-ws-item__inner--alt .pmv-ws-item__img  { order: 1; }
   .pmv-ws-item__inner--alt .pmv-ws-item__text { order: 2; }
   .pmv-ws-item__img { aspect-ratio: unset; height: 220px; border-radius: 14px; }
@@ -282,8 +208,8 @@
 <div class="pmv-ws-driver" id="pmv-ws-driver">
 <section class="pmv-ws" id="pmv-ws" aria-label="Weinarten Auswahl">
 
-  <!-- 0 · Intro -->
-  <div class="pmv-ws-step" data-step="0" data-enter="up">
+  <!-- 0 · Intro (initial aktiv) -->
+  <div class="pmv-ws-step pmv-step--active" data-step="0" data-enter="up">
     <div class="pmv-ws-intro">
       <div class="pmv-ws-kicker">PM VINO Auswahl</div>
       <h2>Wählen Sie nach Ihrem Moment.</h2>
@@ -293,14 +219,13 @@
     </div>
   </div>
 
-  <!-- 1 · Rotwein (kommt von links) -->
+  <!-- 1 · Rotwein -->
   <div class="pmv-ws-step" data-step="1" data-enter="left">
     <div class="pmv-ws-item__inner">
       <div class="pmv-ws-item__img">
         <span class="pmv-ws-num">01</span>
         {%- if rot_col.image -%}
-          <img src="{{ rot_col.image | image_url: width: 900 }}"
-               alt="Rotwein" loading="lazy" width="900" height="1350">
+          <img src="{{ rot_col.image | image_url: width: 900 }}" alt="Rotwein" loading="lazy" width="900" height="1350">
         {%- else -%}
           <img src="BILD-URL-ROTWEIN-HIER-ERSETZEN" alt="Rotwein" loading="lazy">
         {%- endif -%}
@@ -314,14 +239,13 @@
     </div>
   </div>
 
-  <!-- 2 · Weißwein (kommt von rechts) -->
+  <!-- 2 · Weißwein -->
   <div class="pmv-ws-step" data-step="2" data-enter="right">
     <div class="pmv-ws-item__inner pmv-ws-item__inner--alt">
       <div class="pmv-ws-item__img">
         <span class="pmv-ws-num">02</span>
         {%- if weiss_col.image -%}
-          <img src="{{ weiss_col.image | image_url: width: 900 }}"
-               alt="Weißwein" loading="lazy" width="900" height="1350">
+          <img src="{{ weiss_col.image | image_url: width: 900 }}" alt="Weißwein" loading="lazy" width="900" height="1350">
         {%- else -%}
           <img src="BILD-URL-WEISSWEIN-HIER-ERSETZEN" alt="Weißwein" loading="lazy">
         {%- endif -%}
@@ -335,14 +259,13 @@
     </div>
   </div>
 
-  <!-- 3 · Rosé (kommt von links) -->
+  <!-- 3 · Rosé -->
   <div class="pmv-ws-step" data-step="3" data-enter="left">
     <div class="pmv-ws-item__inner">
       <div class="pmv-ws-item__img">
         <span class="pmv-ws-num">03</span>
         {%- if rose_col.image -%}
-          <img src="{{ rose_col.image | image_url: width: 900 }}"
-               alt="Rosé" loading="lazy" width="900" height="1350">
+          <img src="{{ rose_col.image | image_url: width: 900 }}" alt="Rosé" loading="lazy" width="900" height="1350">
         {%- else -%}
           <img src="BILD-URL-ROSE-HIER-ERSETZEN" alt="Rosé" loading="lazy">
         {%- endif -%}
@@ -356,14 +279,13 @@
     </div>
   </div>
 
-  <!-- 4 · Aperitif & Sekt (kommt von rechts) -->
+  <!-- 4 · Aperitif & Sekt -->
   <div class="pmv-ws-step" data-step="4" data-enter="right">
     <div class="pmv-ws-item__inner pmv-ws-item__inner--alt">
       <div class="pmv-ws-item__img">
         <span class="pmv-ws-num">04</span>
         {%- if aperitif_col.image -%}
-          <img src="{{ aperitif_col.image | image_url: width: 900 }}"
-               alt="Aperitif & Sekt" loading="lazy" width="900" height="1350">
+          <img src="{{ aperitif_col.image | image_url: width: 900 }}" alt="Aperitif & Sekt" loading="lazy" width="900" height="1350">
         {%- else -%}
           <img src="BILD-URL-APERITIF-HIER-ERSETZEN" alt="Aperitif & Sekt" loading="lazy">
         {%- endif -%}
@@ -377,7 +299,7 @@
     </div>
   </div>
 
-  <!-- 5 · Übersicht (alle 4 Karten) -->
+  <!-- 5 · Übersicht -->
   <div class="pmv-ws-step pmv-ws-step--overview" data-step="5" data-enter="up">
     <div class="pmv-ws-overview-inner">
       <div class="pmv-ws-overview__head">
@@ -389,8 +311,7 @@
         <a href="/collections/rot-wein" class="pmv-ws-card">
           <div class="pmv-ws-card__img">
             {%- if rot_col.image -%}
-              <img src="{{ rot_col.image | image_url: width: 600 }}"
-                   alt="Rotwein" loading="lazy" width="600" height="800">
+              <img src="{{ rot_col.image | image_url: width: 600 }}" alt="Rotwein" loading="lazy" width="600" height="800">
             {%- else -%}
               <img src="BILD-URL-ROTWEIN-HIER-ERSETZEN" alt="Rotwein" loading="lazy">
             {%- endif -%}
@@ -404,8 +325,7 @@
         <a href="/collections/weiss-wein" class="pmv-ws-card">
           <div class="pmv-ws-card__img">
             {%- if weiss_col.image -%}
-              <img src="{{ weiss_col.image | image_url: width: 600 }}"
-                   alt="Weißwein" loading="lazy" width="600" height="800">
+              <img src="{{ weiss_col.image | image_url: width: 600 }}" alt="Weißwein" loading="lazy" width="600" height="800">
             {%- else -%}
               <img src="BILD-URL-WEISSWEIN-HIER-ERSETZEN" alt="Weißwein" loading="lazy">
             {%- endif -%}
@@ -419,8 +339,7 @@
         <a href="/collections/rose" class="pmv-ws-card">
           <div class="pmv-ws-card__img">
             {%- if rose_col.image -%}
-              <img src="{{ rose_col.image | image_url: width: 600 }}"
-                   alt="Rosé" loading="lazy" width="600" height="800">
+              <img src="{{ rose_col.image | image_url: width: 600 }}" alt="Rosé" loading="lazy" width="600" height="800">
             {%- else -%}
               <img src="BILD-URL-ROSE-HIER-ERSETZEN" alt="Rosé" loading="lazy">
             {%- endif -%}
@@ -434,8 +353,7 @@
         <a href="/collections/aperitif-sekt" class="pmv-ws-card">
           <div class="pmv-ws-card__img">
             {%- if aperitif_col.image -%}
-              <img src="{{ aperitif_col.image | image_url: width: 600 }}"
-                   alt="Aperitif & Sekt" loading="lazy" width="600" height="800">
+              <img src="{{ aperitif_col.image | image_url: width: 600 }}" alt="Aperitif & Sekt" loading="lazy" width="600" height="800">
             {%- else -%}
               <img src="BILD-URL-APERITIF-HIER-ERSETZEN" alt="Aperitif & Sekt" loading="lazy">
             {%- endif -%}
@@ -450,8 +368,7 @@
     </div>
   </div>
 
-  <!-- Fortschrittsbalken + Scroll-Hinweis (per JS sichtbar) -->
-  <div class="pmv-ws-progress" id="pmv-ws-progress">
+  <div class="pmv-ws-progress">
     <div class="pmv-ws-progress__fill" id="pmv-ws-fill"></div>
   </div>
   <div class="pmv-ws-hint" id="pmv-ws-hint">
@@ -473,28 +390,43 @@
 
   var steps   = Array.prototype.slice.call(section.querySelectorAll('.pmv-ws-step'));
   var fill    = document.getElementById('pmv-ws-fill');
-  var progBar = document.getElementById('pmv-ws-progress');
   var hint    = document.getElementById('pmv-ws-hint');
   var STEPS   = steps.length;
   var VH      = window.innerHeight;
 
   function setup() {
     VH = window.innerHeight;
-    /* Driver = (STEPS + 1) * 100vh → jeder Step bekommt 1 VH Scroll-Distanz */
     driver.style.height = (STEPS + 1) * VH + 'px';
   }
+
   setup();
-
   section.classList.add('pmv-js');
-  if (progBar) progBar.style.display = 'block';
-  if (hint)    hint.style.display    = 'flex';
 
-  var current = -1;
+  var current  = 0;
+  var pinState = '';
 
   function update() {
-    var scrolled = Math.max(0, -driver.getBoundingClientRect().top);
-    var step = Math.min(Math.floor(scrolled / VH), STEPS - 1);
+    var rect = driver.getBoundingClientRect();
+    var driverH = driver.offsetHeight;
+    var maxScroll = driverH - VH;
+    var scrolled = Math.max(0, -rect.top);
 
+    /* Pin-State */
+    var newPin;
+    if (rect.top >= 0)                newPin = 'top';
+    else if (scrolled >= maxScroll)   newPin = 'bottom';
+    else                              newPin = 'pin';
+
+    if (newPin !== pinState) {
+      pinState = newPin;
+      section.classList.remove('is-pinned', 'is-park-bottom');
+      if      (newPin === 'pin')    section.classList.add('is-pinned');
+      else if (newPin === 'bottom') section.classList.add('is-park-bottom');
+      /* 'top' = default (absolute, top:0) */
+    }
+
+    /* Active Step */
+    var step = Math.min(Math.floor(scrolled / VH), STEPS - 1);
     if (step !== current) {
       current = step;
       for (var i = 0; i < steps.length; i++) {
