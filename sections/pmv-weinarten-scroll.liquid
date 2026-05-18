@@ -4,7 +4,9 @@
   position: relative;
   left: 50%; right: 50%;
   margin-left: -50vw; margin-right: -50vw;
+  background: #faf4e8;
 }
+.pmv-ws-driver.is-overview { background: #4a1515; }
 
 .pmv-ws {
   --cr:#faf4e8; --cr2:#f0e6cf; --wi:#4a1515; --wi2:#6d2a24;
@@ -435,6 +437,8 @@
         if      (i < step)   el.classList.add('pmv-step--before');
         else if (i === step) el.classList.add('pmv-step--active');
       }
+      if (step === STEPS - 1) driver.classList.add('is-overview');
+      else                    driver.classList.remove('is-overview');
     }
 
     if (fill) fill.style.width = (step / (STEPS - 1) * 100).toFixed(1) + '%';
